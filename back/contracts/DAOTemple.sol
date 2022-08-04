@@ -10,14 +10,17 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFractio
 contract DaoTemple is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
     /**
       _token : 토큰 contract address
-      daoName : dao이름
-      _Period : 투표기간(초 단위) 1 * 60 = 60초
+      daoName : dao  이름
+      _delay : 제안이 생성된 후 투표가 시작될 때까지 지연 (1초 단위)
+      _Period : 투표기간(1초 단위) 1 * 60 = 60초
       _Threshold : proposel을 생성하기 위해 msg.sender가 소유해야할 최소 토큰 수량
       _Quorum : 의결하는 데 필요한 최소의 토큰 양 (totalSupply * _Quorum %)
+
+      기간은 블록 생성 주기 (Klaytn : 1 초)로 설정
      */
-    constructor(IVotes _token, string memory daoName, uint _Period, uint _Threshold,uint _Quorum)
+    constructor(IVotes _token, string memory daoName,uint256 _delay, uint256 _Period, uint256 _Threshold,uint256 _Quorum)
         Governor(daoName)
-        GovernorSettings(1 /* 1 block */, _Period , _Threshold)
+        GovernorSettings(_delay, _Period , _Threshold)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_Quorum)
     {}
